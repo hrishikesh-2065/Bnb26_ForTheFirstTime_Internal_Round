@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+  FairDrop — register.html  (REGISTRATION PAGE)
+  Logic lives in js/register.js. Styles live in css/style.css.
+
+  DEVELOPER / AI NOTES
+  - Submit handler: js/register.js -> POST /auth/register.
+  - Password is only sent to the backend. It is NEVER saved in
+    localStorage / sessionStorage. The backend hashes it (bcrypt)
+    and stores only password_hash in the MySQL "users" table.
+  - Validation rules (length etc.) are constants at the top of register.js.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FairDrop — Register</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="auth-page">
+
+    <div class="brand">
+      <div class="brand-mark">FD</div>
+      <div>
+        <div class="brand-name">FairDrop</div>
+        <div class="brand-sub">FAIR ACCESS • QUEUE SYSTEM</div>
+      </div>
+    </div>
+
+    <section class="auth-card">
+      <div class="eyebrow">NEW ACCOUNT</div>
+      <h1>Register</h1>
+      <p class="muted">Create an account to enter drops.</p>
+
+      <form id="registerForm" novalidate>
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text"
+               autocomplete="username" placeholder="3–20 letters, numbers, _">
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password"
+               autocomplete="new-password" placeholder="at least 8 characters">
+
+        <label for="confirmPassword">Confirm password</label>
+        <input id="confirmPassword" name="confirmPassword" type="password"
+               autocomplete="new-password" placeholder="repeat password">
+
+        <button id="registerBtn" class="btn-primary" type="submit"
+                style="margin-top:20px">Create account</button>
+        <div id="message" class="message" role="alert"></div>
+      </form>
+
+      <p class="auth-switch">Already registered? <a href="index.html">Back to login</a></p>
+
+      <div class="dev-note">
+        Your account is saved in MySQL. The password is stored only as a
+        bcrypt hash, never as plain text.
+      </div>
+    </section>
+  </main>
+
+  <script src="js/register.js"></script>
+</body>
+</html>

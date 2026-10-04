@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--
+  FairDrop — dashboard.html  (QUEUE DASHBOARD)
+  Logic lives in js/dashboard.js. Styles live in css/style.css.
+
+  DEVELOPER / AI NOTES
+  - Panels are shown/hidden by dashboard.js using the .hidden class.
+    State flow:  join panel -> waiting panel -> reservation panel
+                 -> confirmed panel   OR   expired panel
+  - Element IDs below are used by dashboard.js. If you rename an ID here,
+    rename it in the `el` object at the top of dashboard.js too.
+  - Drop name, seats and queue state come from GET /queue/status (MySQL).
+    The values written here are only placeholders shown for a split second.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FairDrop — Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Top bar: brand + user area -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">FD</div>
+        <div>
+          <div class="brand-name">FairDrop</div>
+          <div class="brand-sub">FAIR ACCESS • QUEUE SYSTEM</div>
+        </div>
+      </div>
+      <div class="user-area">
+        <span>Welcome, <strong id="usernameDisplay">...</strong></span>
+        <button id="logoutBtn" class="btn-ghost" type="button">Log out</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+
+      <!-- Current drop / event -->
+      <section class="hero">
+        <div>
+          <div class="eyebrow" id="dropCode">DROP D001</div>
+          <h1 id="dropName">Limited Edition Drop</h1>
+          <p class="muted">Everyone in the queue gets the same 20-second reservation window.</p>
+        </div>
+        <div class="status-pill" id="dropStatus">● DROP LIVE</div>
+      </section>
+
+      <!-- Stats -->
+      <section class="stats">
+        <div class="card stat-card">
+          <span>Seats remaining</span>
+          <strong id="seatsRemaining">—</strong>
+        </div>
+        <div class="card stat-card">
+          <span>Your queue status</span>
+          <strong id="queueStatus">Not in queue</strong>
+        </div>
+        <div class="card stat-card">
+          <span>Reservation window</span>
+          <strong>20 seconds</strong>
+        </div>
+      </section>
+
+      <!-- Live anti-bot monitor: updated from the backend while demo bots run. -->
+      <section class="security-card card" aria-live="polite">
+        <div class="security-head">
+          <div>
+            <div class="eyebrow">SECURITY MONITOR</div>
+            <h2>Bot Defense</h2>
+            <p class="muted">Live backend protection activity</p>
+          </div>
+          <div class="security-live"><span></span> LIVE</div>
+        </div>
+        <div class="security-stats">
+          <div class="security-stat">
+            <span>Bots detected</span>
+            <strong id="botsDetected">0</strong>
+          </div>
+          <div class="security-stat stopped">
+            <span>Bots stopped</span>
+            <strong id="botsStopped">0</strong>
+          </div>
+          <div class="security-stat">
+            <span>Current threat</span>
+            <strong id="botActivity">No active threat</strong>
+          </div>
+        </div>
+        <div class="security-footer" id="botLastEvent">Waiting for security events…</div>
+      </section>
+
+      <!-- 1) Join panel (default view) -->
+      <section id="joinPanel" class="card panel join-panel">
+        <div>
+          <h2>Join the fair queue</h2>
+          <p class="muted">You will get a position. When it is your turn, a seat is held for you briefly.</p>
+        </div>
+        <button id="joinBtn" class="btn-primary" type="button">Join Fair Queue</button>
+      </section>
+
+      <!-- 2) Waiting panel: shows queue position -->
+      <section id="waitingPanel" class="card panel hidden">
+        <div class="queue-position">
+          <div class="position-number" id="queuePosition">—</div>
+          <div>
+            <h2>You are in the queue</h2>
+            <p class="muted" id="waitingText">Waiting for your turn. Keep this page open.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3) Reservation panel: 20-second countdown -->
+      <section id="reservationPanel" class="card panel reservation-panel hidden">
+        <div>
+          <h2>Seat temporarily reserved</h2>
+          <p class="muted">Confirm before the timer ends or the seat is released.</p>
+        </div>
+        <div class="timer" id="timer">20</div>
+        <button id="confirmBtn" class="btn-primary" type="button">Confirm Reservation</button>
+      </section>
+
+      <!-- 4) Confirmed panel -->
+      <section id="confirmedPanel" class="card panel result-panel confirmed hidden">
+        <h2>Reservation Confirmed</h2>
+        <p class="muted">Your seat is secured. Thank you for waiting fairly.</p>
+        <button class="btn-ghost" type="button" data-action="reset">Back to drop</button>
+      </section>
+
+      <!-- 5) Expired panel -->
+      <section id="expiredPanel" class="card panel result-panel expired hidden">
+        <h2>Reservation Expired</h2>
+        <p class="muted">The 20 seconds ran out. The temporary seat was released for the next person.</p>
+        <button class="btn-ghost" type="button" data-action="reset">Back to drop</button>
+      </section>
+
+      <!-- Message line for errors / info -->
+      <div id="message" class="message" role="alert"></div>
+
+      <p class="footnote">
+        The timer here is display only. The server and MySQL decide when a
+        reservation really expires.
+      </p>
+    </main>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
